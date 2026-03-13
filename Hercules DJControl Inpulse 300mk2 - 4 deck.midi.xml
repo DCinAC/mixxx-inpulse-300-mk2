@@ -83,16 +83,6 @@
                 </options>
             </control>
             <control>
-                <group>[EffectRack1_EffectUnit2]</group>
-                <key>group_[Channel1]_enable</key>
-                <description>FX Unit 2 On/Off - Deck A</description>
-                <status>0x96</status>
-                <midino>0x00</midino>
-                <options>
-                    <normal/>
-                </options>
-            </control>
-            <control>
                 <group>[EffectRack1_EffectUnit3_Effect2]</group>
                 <key>next_effect</key>
                 <description>FX Unit 3 - Slot 2 next effect</description>
@@ -120,16 +110,6 @@
                 <midino>0x00</midino>
                 <options>
                     <script-binding/>
-                </options>
-            </control>
-            <control>
-                <group>[EffectRack1_EffectUnit2]</group>
-                <key>group_[Channel2]_enable</key>
-                <description>FX Unit 2 On/Off - Deck B</description>
-                <status>0x97</status>
-                <midino>0x00</midino>
-                <options>
-                    <normal/>
                 </options>
             </control>
             <control>
