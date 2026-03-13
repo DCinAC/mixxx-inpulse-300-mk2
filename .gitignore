@@ -4,5 +4,6 @@
 !.gitignore
 !.claude/
 !.claude/**
+!README.md
 !v2_Hercules-DJControl-Inpulse-300mk2-script.js
 !Hercules DJControl Inpulse 300mk2 - 4 deck.midi.xml
