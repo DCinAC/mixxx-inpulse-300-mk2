@@ -1,0 +1,8 @@
+# Ignore everything...
+*
+# ...except the main mapping files and git/project config
+!.gitignore
+!.claude/
+!.claude/**
+!v2_Hercules-DJControl-Inpulse-300mk2-script.js
+!Hercules DJControl Inpulse 300mk2 - 4 deck.midi.xml

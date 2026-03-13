@@ -83,6 +83,9 @@ DJCi300mk2.init = function() {
     // Ask the controller to send all current knob/slider values over MIDI, which will update
     // the corresponding GUI controls in MIXXX.
     midi.sendShortMsg(0xB0, 0x7F, 0x7F);
+
+    // Connect deck-dependent LED feedback (hotcues, play, cue, sync, etc.)
+    DJCi300mk2._connectDeckLEDs();
 };
 
 // The Vinyl button, used to enable or disable scratching on the jog wheels (One per deck).
@@ -277,24 +280,138 @@ DJCi300mk2.bendWheel = function(channel, control, value, _status, _group) {
         "[Channel" + DJCi300mk2.activeDeck(channel) + "]", "jog", interval * DJCi300mk2.bendScale);
 };
 
+// ===================== Stem Mode Toggle (Pad Mode 3) =====================
+// Pads 1-4 toggle stems 4,3,2,1 between unmuted (volume_set_one) and muted.
+// LED lit = stem unmuted (volume == 1.0).
+// Stem index: pad 1→Stem4, pad 2→Stem3, pad 3→Stem2, pad 4→Stem1
+DJCi300mk2._stemForPad = [4, 3, 2, 1];
+
+DJCi300mk2._mkStemToggle = function(padIndex) {
+    var stemNum = DJCi300mk2._stemForPad[padIndex];
+    return function(channel, _control, value, _status, _group) {
+        if (!value) { return; }
+        var deck = DJCi300mk2.activeDeck(DJCi300mk2._physicalDeck(channel));
+        var group = "[Channel" + deck + "_Stem" + stemNum + "]";
+        var muted = engine.getValue(group, "mute");
+        if (muted) {
+            // Unmute: set volume to 1
+            engine.setValue(group, "mute", 0);
+            engine.setValue(group, "volume", 1.0);
+        } else {
+            // Mute
+            engine.setValue(group, "mute", 1);
+        }
+    };
+};
+
+DJCi300mk2.deckStemToggle1 = DJCi300mk2._mkStemToggle(0);  // pad 1 → Stem4
+DJCi300mk2.deckStemToggle2 = DJCi300mk2._mkStemToggle(1);  // pad 2 → Stem3
+DJCi300mk2.deckStemToggle3 = DJCi300mk2._mkStemToggle(2);  // pad 3 → Stem2
+DJCi300mk2.deckStemToggle4 = DJCi300mk2._mkStemToggle(3);  // pad 4 → Stem1
+
 DJCi300mk2.shutdown = function() {
+    DJCi300mk2._disconnectDeckLEDs();
     midi.sendShortMsg(0x90, 0x03, 0x00);
     midi.sendShortMsg(0xB0, 0x7F, 0x00);
 };
 
-// Refresh pad hotcue LEDs and PFL button LED for one physical side after a deck switch.
-// physicalDeck: 1 = left/Deck-A side, 2 = right/Deck-B side
-DJCi300mk2._updateDeckLEDs = function(physicalDeck) {
-    var aDeck = DJCi300mk2.activeDeck(physicalDeck);
-    var padStatus = (physicalDeck === 1) ? 0x96 : 0x97;
-    var pflStatus = (physicalDeck === 1) ? 0x91 : 0x92;
-    for (var i = 1; i <= 8; i++) {
-        var ledVal = engine.getValue("[Channel" + aDeck + "]", "hotcue_" + i + "_enabled") ? 0x7E : 0x00;
-        midi.sendShortMsg(padStatus, i - 1,        ledVal); // 0x00–0x07
-        midi.sendShortMsg(padStatus, (i - 1) + 8,  ledVal); // 0x08–0x0F
+// ===================== LED Management =====================
+// All deck-dependent LED feedback is handled here via engine.makeConnection,
+// so LEDs always track the active deck in real time (including after track loads).
+// Format: [controlKey, onValue, [[sideA_status, sideA_midino], ...], [[sideB_status, sideB_midino], ...]]
+DJCi300mk2._ledMap = [
+    // Hotcue pads (on = 0x7E)
+    ["hotcue_1_enabled", 0x7E, [[0x96,0x00],[0x96,0x08]], [[0x97,0x00],[0x97,0x08]]],
+    ["hotcue_2_enabled", 0x7E, [[0x96,0x01],[0x96,0x09]], [[0x97,0x01],[0x97,0x09]]],
+    ["hotcue_3_enabled", 0x7E, [[0x96,0x02],[0x96,0x0A]], [[0x97,0x02],[0x97,0x0A]]],
+    ["hotcue_4_enabled", 0x7E, [[0x96,0x03],[0x96,0x0B]], [[0x97,0x03],[0x97,0x0B]]],
+    ["hotcue_5_enabled", 0x7E, [[0x96,0x04],[0x96,0x0C]], [[0x97,0x04],[0x97,0x0C]]],
+    ["hotcue_6_enabled", 0x7E, [[0x96,0x05],[0x96,0x0D]], [[0x97,0x05],[0x97,0x0D]]],
+    ["hotcue_7_enabled", 0x7E, [[0x96,0x06],[0x96,0x0E]], [[0x97,0x06],[0x97,0x0E]]],
+    ["hotcue_8_enabled", 0x7E, [[0x96,0x07],[0x96,0x0F]], [[0x97,0x07],[0x97,0x0F]]],
+    // Beatlooproll pads
+    ["beatlooproll_0.125_activate", 0x7F, [[0x96,0x10]], [[0x97,0x10]]],
+    ["beatlooproll_0.25_activate",  0x7F, [[0x96,0x11]], [[0x97,0x11]]],
+    ["beatlooproll_0.5_activate",   0x7F, [[0x96,0x12]], [[0x97,0x12]]],
+    ["beatlooproll_1_activate",     0x7F, [[0x96,0x13]], [[0x97,0x13]]],
+    ["beatlooproll_2_activate",     0x7F, [[0x96,0x14]], [[0x97,0x14]]],
+    ["beatlooproll_4_activate",     0x7F, [[0x96,0x15]], [[0x97,0x15]]],
+    ["beatlooproll_8_activate",     0x7F, [[0x96,0x16]], [[0x97,0x16]]],
+    ["beatlooproll_16_activate",    0x7F, [[0x96,0x17]], [[0x97,0x17]]],
+    // Beatjump pads removed — beatjump is a one-shot action with no persistent
+    // state, and its MIDI addresses (0x96/0x00 etc.) conflict with hotcue LEDs.
+    // Deck buttons
+    ["slip_enabled",       0x7F, [[0x91,0x01]], [[0x92,0x01]]],
+    ["quantize",           0x7F, [[0x91,0x02]], [[0x92,0x02]]],
+    ["beatloop_4_enabled", 0x7F, [[0x91,0x03]], [[0x92,0x03]]],
+    ["sync_enabled",       0x7F, [[0x91,0x05]], [[0x92,0x05]]],
+    ["sync_master",        0x7F, [[0x93,0x05]], [[0x94,0x05]]],
+    ["cue_indicator",      0x7F, [[0x91,0x06]], [[0x92,0x06]]],
+    ["start_play",         0x7F, [[0x94,0x06]], []],
+    ["play_indicator",     0x7F, [[0x91,0x07]], [[0x92,0x07]]],
+    ["pfl",                0x7F, [[0x91,0x0C]], [[0x92,0x0C]]],
+    ["end_of_track",       0x7F, [[0x91,0x1C],[0x91,0x1D]], [[0x92,0x1C],[0x92,0x1D]]]
+];
+
+// Stem LED map: tracks mute state, LED ON when NOT muted (inverted logic).
+// Format: [stemNum, onValue, [[sideA_status, sideA_midino], ...], [[sideB_status, sideB_midino], ...]]
+DJCi300mk2._stemLedMap = [
+    [4, 0x7F, [[0x96,0x20]], [[0x97,0x20]]],  // pad 1 → Stem4
+    [3, 0x7F, [[0x96,0x21]], [[0x97,0x21]]],  // pad 2 → Stem3
+    [2, 0x7F, [[0x96,0x22]], [[0x97,0x22]]],  // pad 3 → Stem2
+    [1, 0x7F, [[0x96,0x23]], [[0x97,0x23]]]   // pad 4 → Stem1
+];
+
+DJCi300mk2._ledConnections = [];
+
+DJCi300mk2._connectOneLED = function(group, key, onVal, midiPairs) {
+    if (!midiPairs || midiPairs.length === 0) { return; }
+    var conn = engine.makeConnection(group, key, function(value) {
+        var v = (value >= 0.5) ? onVal : 0x00;
+        for (var j = 0; j < midiPairs.length; j++) {
+            midi.sendShortMsg(midiPairs[j][0], midiPairs[j][1], v);
+        }
+    });
+    conn.trigger();
+    DJCi300mk2._ledConnections.push(conn);
+};
+
+// Inverted variant: LED ON when value < 0.5 (used for mute → LED on when NOT muted)
+DJCi300mk2._connectOneLEDInverted = function(group, key, onVal, midiPairs) {
+    if (!midiPairs || midiPairs.length === 0) { return; }
+    var conn = engine.makeConnection(group, key, function(value) {
+        var v = (value < 0.5) ? onVal : 0x00;
+        for (var j = 0; j < midiPairs.length; j++) {
+            midi.sendShortMsg(midiPairs[j][0], midiPairs[j][1], v);
+        }
+    });
+    conn.trigger();
+    DJCi300mk2._ledConnections.push(conn);
+};
+
+DJCi300mk2._connectDeckLEDs = function() {
+    DJCi300mk2._disconnectDeckLEDs();
+    var aDeck = DJCi300mk2.activeDeck(1);
+    var bDeck = DJCi300mk2.activeDeck(2);
+    var map = DJCi300mk2._ledMap;
+    for (var i = 0; i < map.length; i++) {
+        DJCi300mk2._connectOneLED("[Channel" + aDeck + "]", map[i][0], map[i][1], map[i][2]);
+        DJCi300mk2._connectOneLED("[Channel" + bDeck + "]", map[i][0], map[i][1], map[i][3]);
     }
-    var pflVal = engine.getValue("[Channel" + aDeck + "]", "pfl") ? 0x7F : 0x00;
-    midi.sendShortMsg(pflStatus, 0x0C, pflVal);
+    // Stem LEDs: track mute state (inverted — LED on when NOT muted)
+    var stemMap = DJCi300mk2._stemLedMap;
+    for (var s = 0; s < stemMap.length; s++) {
+        var stemGroup = "_Stem" + stemMap[s][0];
+        DJCi300mk2._connectOneLEDInverted("[Channel" + aDeck + stemGroup + "]", "mute", stemMap[s][1], stemMap[s][2]);
+        DJCi300mk2._connectOneLEDInverted("[Channel" + bDeck + stemGroup + "]", "mute", stemMap[s][1], stemMap[s][3]);
+    }
+};
+
+DJCi300mk2._disconnectDeckLEDs = function() {
+    for (var i = 0; i < DJCi300mk2._ledConnections.length; i++) {
+        DJCi300mk2._ledConnections[i].disconnect();
+    }
+    DJCi300mk2._ledConnections = [];
 };
 
 // Assistant button: toggle Deck 3/4 control mode — solid LED on, off when back to 1/2
@@ -304,6 +421,5 @@ DJCi300mk2.assistantButton = function(_channel, _control, value, _status, _group
     }
     DJCi300mk2.deck34Active = !DJCi300mk2.deck34Active;
     midi.sendShortMsg(0x90, 0x03, DJCi300mk2.deck34Active ? 0x7F : 0x00);
-    DJCi300mk2._updateDeckLEDs(1);
-    DJCi300mk2._updateDeckLEDs(2);
+    DJCi300mk2._connectDeckLEDs();
 };

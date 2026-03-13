@@ -1914,720 +1914,90 @@
                     <normal/>
                 </options>
             </control>
+            <!-- Stem mode (Pad Mode 3) — pads 1-4 toggle stem mute -->
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckStemToggle1</key>
+                <description>Stem Toggle Pad 1 - Deck A (Stem4)</description>
+                <status>0x96</status>
+                <midino>0x20</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckStemToggle2</key>
+                <description>Stem Toggle Pad 2 - Deck A (Stem3)</description>
+                <status>0x96</status>
+                <midino>0x21</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckStemToggle3</key>
+                <description>Stem Toggle Pad 3 - Deck A (Stem2)</description>
+                <status>0x96</status>
+                <midino>0x22</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckStemToggle4</key>
+                <description>Stem Toggle Pad 4 - Deck A (Stem1)</description>
+                <status>0x96</status>
+                <midino>0x23</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckStemToggle1</key>
+                <description>Stem Toggle Pad 1 - Deck B (Stem4)</description>
+                <status>0x97</status>
+                <midino>0x20</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckStemToggle2</key>
+                <description>Stem Toggle Pad 2 - Deck B (Stem3)</description>
+                <status>0x97</status>
+                <midino>0x21</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckStemToggle3</key>
+                <description>Stem Toggle Pad 3 - Deck B (Stem2)</description>
+                <status>0x97</status>
+                <midino>0x22</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckStemToggle4</key>
+                <description>Stem Toggle Pad 4 - Deck B (Stem1)</description>
+                <status>0x97</status>
+                <midino>0x23</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
         </controls>
         <outputs>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatjump_1_backward</key>
-                <description>(Beatjump 1 backward DECK A)</description>
-                <status>0x96</status>
-                <midino>0x50</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatjump_1_forward</key>
-                <description>(Beatjump 1 forward DECK A)</description>
-                <status>0x96</status>
-                <midino>0x00</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatjump_2_backward</key>
-                <description>(Beatjump 2 backward DECK A)</description>
-                <status>0x96</status>
-                <midino>0x52</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatjump_2_forward</key>
-                <description>(Beatjump 2 forward DECK A)</description>
-                <status>0x96</status>
-                <midino>0x53</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatjump_4_backward</key>
-                <description>(Beatjump 4 backward DECK A)</description>
-                <status>0x96</status>
-                <midino>0x54</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatjump_4_forward</key>
-                <description>(Beatjump 4 forward DECK A)</description>
-                <status>0x96</status>
-                <midino>0x55</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatjump_8_backward</key>
-                <description>(Beatjump 8 backward DECK A)</description>
-                <status>0x96</status>
-                <midino>0x56</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatjump_8_forward</key>
-                <description>(Beatjump 8 forward DECK A)</description>
-                <status>0x96</status>
-                <midino>0x57</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatloop_4_enabled</key>
-                <description>Loop In LED DA</description>
-                <status>0x91</status>
-                <midino>0x03</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatlooproll_0.125_activate</key>
-                <description>Loop 1/8 Beat (Pad 1)</description>
-                <status>0x96</status>
-                <midino>0x10</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatlooproll_0.25_activate</key>
-                <description>Loop 1/4 Beat (Pad 2)</description>
-                <status>0x96</status>
-                <midino>0x11</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatlooproll_0.5_activate</key>
-                <description>Loop 1/2 Beat (Pad 3)</description>
-                <status>0x96</status>
-                <midino>0x12</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatlooproll_16_activate</key>
-                <description>Loop 16 Beat (Pad 8)</description>
-                <status>0x96</status>
-                <midino>0x17</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatlooproll_1_activate</key>
-                <description>Loop 1 Beat (Pad 4)</description>
-                <status>0x96</status>
-                <midino>0x13</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatlooproll_2_activate</key>
-                <description>Loop 2 Beat (Pad 5)</description>
-                <status>0x96</status>
-                <midino>0x14</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatlooproll_4_activate</key>
-                <description>Loop 4 Beat (Pad 6)</description>
-                <status>0x96</status>
-                <midino>0x15</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>beatlooproll_8_activate</key>
-                <description>Loop 8 Beat (Pad 7)</description>
-                <status>0x96</status>
-                <midino>0x16</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>cue_indicator</key>
-                <description>CUE LED Deck A</description>
-                <status>0x91</status>
-                <midino>0x06</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>end_of_track</key>
-                <description>Auto DJ On</description>
-                <status>0x91</status>
-                <midino>0x1D</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>end_of_track</key>
-                <description>Auto DJ On</description>
-                <status>0x91</status>
-                <midino>0x1C</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_1_enabled</key>
-                <description>Hotcue 1 (Pad 1)</description>
-                <status>0x96</status>
-                <midino>0x08</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_1_enabled</key>
-                <description>Hotcue 1 (Pad 1)</description>
-                <status>0x96</status>
-                <midino>0x00</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_2_enabled</key>
-                <description>Hotcue 2 (Pad 2)</description>
-                <status>0x96</status>
-                <midino>0x09</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_2_enabled</key>
-                <description>Hotcue 2 (Pad 2)</description>
-                <status>0x96</status>
-                <midino>0x01</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_3_enabled</key>
-                <description>Hotcue 3 (Pad 3)</description>
-                <status>0x96</status>
-                <midino>0x0A</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_3_enabled</key>
-                <description>Hotcue 3 (Pad 3)</description>
-                <status>0x96</status>
-                <midino>0x02</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_4_enabled</key>
-                <description>Hotcue 4 (Pad 4)</description>
-                <status>0x96</status>
-                <midino>0x0B</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_4_enabled</key>
-                <description>Hotcue 4 (Pad 4)</description>
-                <status>0x96</status>
-                <midino>0x03</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_5_enabled</key>
-                <description>Hotcue 5 (Pad 5)</description>
-                <status>0x96</status>
-                <midino>0x0C</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_5_enabled</key>
-                <description>Hotcue 5 (Pad 5)</description>
-                <status>0x96</status>
-                <midino>0x04</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_6_enabled</key>
-                <description>Hotcue 6 (Pad 6)</description>
-                <status>0x96</status>
-                <midino>0x0D</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_6_enabled</key>
-                <description>Hotcue 6 (Pad 6)</description>
-                <status>0x96</status>
-                <midino>0x05</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_7_enabled</key>
-                <description>Hotcue 7 (Pad 7)</description>
-                <status>0x96</status>
-                <midino>0x0E</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_7_enabled</key>
-                <description>Hotcue 7 (Pad 7)</description>
-                <status>0x96</status>
-                <midino>0x06</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_8_enabled</key>
-                <description>Hotcue 8 (Pad 8)</description>
-                <status>0x96</status>
-                <midino>0x0F</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>hotcue_8_enabled</key>
-                <description>Hotcue 8 (Pad 8)</description>
-                <status>0x96</status>
-                <midino>0x07</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>pfl</key>
-                <description>PFL LED DECK A</description>
-                <status>0x91</status>
-                <midino>0x0C</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>play_indicator</key>
-                <description>PLAY LED Deck A</description>
-                <status>0x91</status>
-                <midino>0x07</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>quantize</key>
-                <description>Q button Deck A</description>
-                <status>0x91</status>
-                <midino>0x02</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>slip_enabled</key>
-                <description>Slip button Deck A</description>
-                <status>0x91</status>
-                <midino>0x01</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>start_play</key>
-                <description>CUE LED Deck A(SHIFT MODE)</description>
-                <status>0x94</status>
-                <midino>0x06</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>sync_enabled</key>
-                <description>SYNC LED Deck A</description>
-                <status>0x91</status>
-                <midino>0x05</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel1]</group>
-                <key>sync_master</key>
-                <description>SYNC LED Deck A(SHIFT mode)</description>
-                <status>0x93</status>
-                <midino>0x05</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatjump_1_backward</key>
-                <description>(Beatjump 1 backward DECK B)</description>
-                <status>0x97</status>
-                <midino>0x50</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatjump_1_forward</key>
-                <description>(Beatjump 1 forward DECK B)</description>
-                <status>0x97</status>
-                <midino>0x00</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatjump_2_backward</key>
-                <description>(Beatjump 2 backward DECK B)</description>
-                <status>0x97</status>
-                <midino>0x52</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatjump_2_forward</key>
-                <description>(Beatjump 2 forward DECK B)</description>
-                <status>0x97</status>
-                <midino>0x53</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatjump_4_backward</key>
-                <description>(Beatjump 4 backward DECK B)</description>
-                <status>0x97</status>
-                <midino>0x54</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatjump_4_forward</key>
-                <description>(Beatjump 4 forward DECK B)</description>
-                <status>0x97</status>
-                <midino>0x55</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatjump_8_backward</key>
-                <description>(Beatjump 8 backward DECK B)</description>
-                <status>0x97</status>
-                <midino>0x56</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatjump_8_forward</key>
-                <description>(Beatjump 8 forward Deck B)</description>
-                <status>0x97</status>
-                <midino>0x57</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatloop_4_enabled</key>
-                <description>Loop In LED DB</description>
-                <status>0x92</status>
-                <midino>0x03</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatlooproll_0.125_activate</key>
-                <description>Loop 1/8 Beat (Pad 1)</description>
-                <status>0x97</status>
-                <midino>0x10</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatlooproll_0.25_activate</key>
-                <description>Loop 1/4 Beat (Pad 2)</description>
-                <status>0x97</status>
-                <midino>0x11</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatlooproll_0.5_activate</key>
-                <description>Loop 1/2 Beat (Pad 3)</description>
-                <status>0x97</status>
-                <midino>0x12</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatlooproll_16_activate</key>
-                <description>Loop 16 Beat (Pad 8)</description>
-                <status>0x97</status>
-                <midino>0x17</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatlooproll_1_activate</key>
-                <description>Loop 1 Beat (Pad 4)</description>
-                <status>0x97</status>
-                <midino>0x13</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatlooproll_2_activate</key>
-                <description>Loop 2 Beat (Pad 5)</description>
-                <status>0x97</status>
-                <midino>0x14</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatlooproll_4_activate</key>
-                <description>Loop 4 Beat (Pad 6)</description>
-                <status>0x97</status>
-                <midino>0x15</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>beatlooproll_8_activate</key>
-                <description>Loop 8 Beat (Pad 7)</description>
-                <status>0x97</status>
-                <midino>0x16</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>cue_indicator</key>
-                <description>CUE LED Deck B</description>
-                <status>0x92</status>
-                <midino>0x06</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>end_of_track</key>
-                <description>Auto DJ On</description>
-                <status>0x92</status>
-                <midino>0x1D</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>end_of_track</key>
-                <description>Auto DJ On</description>
-                <status>0x92</status>
-                <midino>0x1C</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_1_enabled</key>
-                <description>Hotcue 1 (Pad 1)</description>
-                <status>0x97</status>
-                <midino>0x08</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_1_enabled</key>
-                <description>Hotcue 1 (Pad 1)</description>
-                <status>0x97</status>
-                <midino>0x00</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_2_enabled</key>
-                <description>Hotcue 2 (Pad 2)</description>
-                <status>0x97</status>
-                <midino>0x09</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_2_enabled</key>
-                <description>Hotcue 2 (Pad 2)</description>
-                <status>0x97</status>
-                <midino>0x01</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_3_enabled</key>
-                <description>Hotcue 3 (Pad 3)</description>
-                <status>0x97</status>
-                <midino>0x0A</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_3_enabled</key>
-                <description>Hotcue 3 (Pad 3)</description>
-                <status>0x97</status>
-                <midino>0x02</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_4_enabled</key>
-                <description>Hotcue 4 (Pad 4)</description>
-                <status>0x97</status>
-                <midino>0x0B</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_4_enabled</key>
-                <description>Hotcue 4 (Pad 4)</description>
-                <status>0x97</status>
-                <midino>0x03</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_5_enabled</key>
-                <description>Hotcue 5 (Pad 5)</description>
-                <status>0x97</status>
-                <midino>0x0C</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_5_enabled</key>
-                <description>Hotcue 5 (Pad 5)</description>
-                <status>0x97</status>
-                <midino>0x04</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_6_enabled</key>
-                <description>Hotcue 6 (Pad 6)</description>
-                <status>0x97</status>
-                <midino>0x0D</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_6_enabled</key>
-                <description>Hotcue 6 (Pad 6)</description>
-                <status>0x97</status>
-                <midino>0x05</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_7_enabled</key>
-                <description>Hotcue 7 (Pad 7)</description>
-                <status>0x97</status>
-                <midino>0x0E</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_7_enabled</key>
-                <description>Hotcue 7 (Pad 7)</description>
-                <status>0x97</status>
-                <midino>0x06</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_8_enabled</key>
-                <description>Hotcue 8 (Pad 8)</description>
-                <status>0x97</status>
-                <midino>0x0F</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>hotcue_8_enabled</key>
-                <description>Hotcue 8 (Pad 8)</description>
-                <status>0x97</status>
-                <midino>0x07</midino>
-                <on>0x7E</on>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>pfl</key>
-                <description>PFL LED DECK B</description>
-                <status>0x92</status>
-                <midino>0x0C</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>play_indicator</key>
-                <description>PLAY LED Deck B</description>
-                <status>0x92</status>
-                <midino>0x07</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>quantize</key>
-                <description>Q button Deck B</description>
-                <status>0x92</status>
-                <midino>0x02</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>slip_enabled</key>
-                <description>Slip button Deck B</description>
-                <status>0x92</status>
-                <midino>0x01</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>sync_enabled</key>
-                <description>SYNC LED Deck B</description>
-                <status>0x92</status>
-                <midino>0x05</midino>
-                <minimum>0.5</minimum>
-            </output>
-            <output>
-                <group>[Channel2]</group>
-                <key>sync_master</key>
-                <description>SYNC LED Deck B(SHIFT mode)</description>
-                <status>0x94</status>
-                <midino>0x05</midino>
-                <minimum>0.5</minimum>
-            </output>
+            <!-- Channel1 and Channel2 deck-dependent outputs removed; managed by script -->
             <output>
                 <group>[EffectRack1_EffectUnit1]</group>
                 <key>group_[Channel1]_enable</key>
