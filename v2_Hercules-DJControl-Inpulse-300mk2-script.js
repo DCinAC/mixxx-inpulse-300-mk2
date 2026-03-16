@@ -173,14 +173,31 @@ DJCi300mk2.deckPlayStutter = DJCi300mk2._mkDeckBtn("play_stutter");
 DJCi300mk2.deckLoopHalve   = DJCi300mk2._mkDeckBtn("loop_halve");
 DJCi300mk2.deckLoopDouble  = DJCi300mk2._mkDeckBtn("loop_double");
 // Hotcue activate (held — press starts, release ends)
-DJCi300mk2.deckHotcue1     = DJCi300mk2._mkDeckHeld("hotcue_1_activate");
-DJCi300mk2.deckHotcue2     = DJCi300mk2._mkDeckHeld("hotcue_2_activate");
-DJCi300mk2.deckHotcue3     = DJCi300mk2._mkDeckHeld("hotcue_3_activate");
-DJCi300mk2.deckHotcue4     = DJCi300mk2._mkDeckHeld("hotcue_4_activate");
-DJCi300mk2.deckHotcue5     = DJCi300mk2._mkDeckHeld("hotcue_5_activate");
-DJCi300mk2.deckHotcue6     = DJCi300mk2._mkDeckHeld("hotcue_6_activate");
-DJCi300mk2.deckHotcue7     = DJCi300mk2._mkDeckHeld("hotcue_7_activate");
-DJCi300mk2.deckHotcue8     = DJCi300mk2._mkDeckHeld("hotcue_8_activate");
+// Uses a dedicated factory that immediately re-asserts the LED after every
+// press/release to override the hardware echo (controller lights pad on
+// note-on regardless of hotcue state, causing false flashes).
+DJCi300mk2._mkHotcueHeld = function(num) {
+    var midino = num - 1; // hotcue 1→0x00, 2→0x01, … 8→0x07
+    return function(channel, _control, value, _status, _group) {
+        var physDeck = DJCi300mk2._physicalDeck(channel);
+        var deck     = DJCi300mk2.activeDeck(physDeck);
+        engine.setValue("[Channel" + deck + "]", "hotcue_" + num + "_activate", value > 0 ? 1 : 0);
+        // Re-assert LED immediately so hardware echo can't leave a false light
+        var enabled = engine.getValue("[Channel" + deck + "]", "hotcue_" + num + "_enabled");
+        var ledVal  = enabled ? 0x7E : 0x00;
+        var status  = (physDeck === 1) ? 0x96 : 0x97;
+        midi.sendShortMsg(status, midino,        ledVal); // primary LED address
+        midi.sendShortMsg(status, midino + 0x08, ledVal); // alternate LED address
+    };
+};
+DJCi300mk2.deckHotcue1     = DJCi300mk2._mkHotcueHeld(1);
+DJCi300mk2.deckHotcue2     = DJCi300mk2._mkHotcueHeld(2);
+DJCi300mk2.deckHotcue3     = DJCi300mk2._mkHotcueHeld(3);
+DJCi300mk2.deckHotcue4     = DJCi300mk2._mkHotcueHeld(4);
+DJCi300mk2.deckHotcue5     = DJCi300mk2._mkHotcueHeld(5);
+DJCi300mk2.deckHotcue6     = DJCi300mk2._mkHotcueHeld(6);
+DJCi300mk2.deckHotcue7     = DJCi300mk2._mkHotcueHeld(7);
+DJCi300mk2.deckHotcue8     = DJCi300mk2._mkHotcueHeld(8);
 // Hotcue clear (one-shot trigger)
 DJCi300mk2.deckHotcue1C    = DJCi300mk2._mkDeckBtn("hotcue_1_clear");
 DJCi300mk2.deckHotcue2C    = DJCi300mk2._mkDeckBtn("hotcue_2_clear");
