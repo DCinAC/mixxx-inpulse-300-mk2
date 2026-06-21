@@ -9,7 +9,7 @@
         <scriptfiles>
             <file filename="lodash.mixxx.js" functionprefix=""/>
             <file filename="midi-components-0.0.js" functionprefix=""/>
-            <file filename="v2_Hercules-DJControl-Inpulse-300mk2-script - Copy.js" functionprefix="DJCi300mk2"/>
+            <file filename="v2_Hercules-DJControl-Inpulse-300mk2-script.js" functionprefix="DJCi300mk2"/>
         </scriptfiles>
         <controls>
             <control>
@@ -1971,6 +1971,168 @@
                 <description>Stem Toggle Pad 4 - Deck B (Stem1)</description>
                 <status>0x97</status>
                 <midino>0x23</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <!-- Stem Echo-out (Pad Mode 3, pads 5-8) — mute stem + Echo tail via EffectUnit4 -->
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckStemEcho1</key>
+                <description>Stem Echo Pad 5 - Deck A (Stem4)</description>
+                <status>0x96</status>
+                <midino>0x24</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckStemEcho2</key>
+                <description>Stem Echo Pad 6 - Deck A (Stem3)</description>
+                <status>0x96</status>
+                <midino>0x25</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckStemEcho3</key>
+                <description>Stem Echo Pad 7 - Deck A (Stem2)</description>
+                <status>0x96</status>
+                <midino>0x26</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckStemEcho4</key>
+                <description>Stem Echo Pad 8 - Deck A (Stem1)</description>
+                <status>0x96</status>
+                <midino>0x27</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckStemEcho1</key>
+                <description>Stem Echo Pad 5 - Deck B (Stem4)</description>
+                <status>0x97</status>
+                <midino>0x24</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckStemEcho2</key>
+                <description>Stem Echo Pad 6 - Deck B (Stem3)</description>
+                <status>0x97</status>
+                <midino>0x25</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckStemEcho3</key>
+                <description>Stem Echo Pad 7 - Deck B (Stem2)</description>
+                <status>0x97</status>
+                <midino>0x26</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckStemEcho4</key>
+                <description>Stem Echo Pad 8 - Deck B (Stem1)</description>
+                <status>0x97</status>
+                <midino>0x27</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <!-- Toneplay / Key page (HOT CUE alt, 0x40-0x43): pads 1-4 = -1 +1 reset keylock (pads 5-8 unused) -->
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckKeyDown</key>
+                <description>Key -1 Pad 1 - Deck A</description>
+                <status>0x96</status>
+                <midino>0x40</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckKeyUp</key>
+                <description>Key +1 Pad 2 - Deck A</description>
+                <status>0x96</status>
+                <midino>0x41</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckKeyReset</key>
+                <description>Key reset Pad 3 - Deck A</description>
+                <status>0x96</status>
+                <midino>0x42</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel1]</group>
+                <key>DJCi300mk2.deckKeylock</key>
+                <description>Keylock Pad 4 - Deck A</description>
+                <status>0x96</status>
+                <midino>0x43</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckKeyDown</key>
+                <description>Key -1 Pad 1 - Deck B</description>
+                <status>0x97</status>
+                <midino>0x40</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckKeyUp</key>
+                <description>Key +1 Pad 2 - Deck B</description>
+                <status>0x97</status>
+                <midino>0x41</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckKeyReset</key>
+                <description>Key reset Pad 3 - Deck B</description>
+                <status>0x97</status>
+                <midino>0x42</midino>
+                <options>
+                    <script-binding/>
+                </options>
+            </control>
+            <control>
+                <group>[Channel2]</group>
+                <key>DJCi300mk2.deckKeylock</key>
+                <description>Keylock Pad 4 - Deck B</description>
+                <status>0x97</status>
+                <midino>0x43</midino>
                 <options>
                     <script-binding/>
                 </options>
