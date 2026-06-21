@@ -27,6 +27,15 @@ DJCi300mk2.scratchShiftMultiplier = 4;
 // How fast bending is.
 DJCi300mk2.bendScale = 1.0;
 
+// --- Stem Echo-out (Pad Mode 3, pads 5-8) ---
+// Which Mixxx effect unit hosts the echo tail. Load "Echo" (or Reverb/Delay)
+// into this unit's slot 1 once in Mixxx — the script only routes/levels it.
+DJCi300mk2.stemEchoUnit = 4;
+// Wet/dry of the echo unit, set once at startup (0.0 = dry … 1.0 = fully wet).
+DJCi300mk2.stemEchoMix = 0.5;
+// How long (ms) the echo rings on the deck before it auto-disables.
+DJCi300mk2.stemEchoTimeoutMs = 1200;
+
 // Other scratch related options
 DJCi300mk2.kScratchActionNone = 0;
 DJCi300mk2.kScratchActionScratch = 1;
@@ -83,6 +92,9 @@ DJCi300mk2.init = function() {
     // Ask the controller to send all current knob/slider values over MIDI, which will update
     // the corresponding GUI controls in MIXXX.
     midi.sendShortMsg(0xB0, 0x7F, 0x7F);
+
+    // Set the wet/dry of the dedicated stem-echo unit once (load Echo into it in Mixxx).
+    engine.setValue("[EffectRack1_EffectUnit" + DJCi300mk2.stemEchoUnit + "]", "mix", DJCi300mk2.stemEchoMix);
 
     // Connect deck-dependent LED feedback (hotcues, play, cue, sync, etc.)
     DJCi300mk2._connectDeckLEDs();
@@ -326,6 +338,91 @@ DJCi300mk2.deckStemToggle2 = DJCi300mk2._mkStemToggle(1);  // pad 2 → Stem3
 DJCi300mk2.deckStemToggle3 = DJCi300mk2._mkStemToggle(2);  // pad 3 → Stem2
 DJCi300mk2.deckStemToggle4 = DJCi300mk2._mkStemToggle(3);  // pad 4 → Stem1
 
+// ===================== Stem Echo-out (Pad Mode 3, pads 5-8) =====================
+// Pads 5-8 mirror pads 1-4 (Stem4,3,2,1). Pressing a pad routes the dedicated
+// echo unit onto the active deck and mutes that stem, so the stem's last moment
+// rings out as a tail while the rest of the deck keeps playing. The echo
+// auto-disables after stemEchoTimeoutMs. Bring the stem back with pads 1-4.
+// NOTE: the echo is deck-level (Mixxx has no per-stem effect routing), so the
+// tail is an approximation of the removed stem, not a perfectly isolated one.
+DJCi300mk2._stemEcho = {};  // active deck → { timer, status, midino }
+
+DJCi300mk2._mkStemEcho = function(padIndex) {
+    var stemNum = DJCi300mk2._stemForPad[padIndex];  // pads 5-8 → Stem 4,3,2,1
+    var midino  = 0x24 + padIndex;                   // 0x24..0x27
+    return function(channel, _control, value, _status, _group) {
+        if (!value) { return; }
+        var physDeck = DJCi300mk2._physicalDeck(channel);
+        var deck     = DJCi300mk2.activeDeck(physDeck);
+        // Only act on stem tracks
+        if (engine.getValue("[Channel" + deck + "]", "stem_count") < 1) { return; }
+        var unit   = "[EffectRack1_EffectUnit" + DJCi300mk2.stemEchoUnit + "]";
+        var status = (physDeck === 1) ? 0x96 : 0x97;
+        // Clear any echo already running on this deck
+        var prev = DJCi300mk2._stemEcho[deck];
+        if (prev) {
+            engine.stopTimer(prev.timer);
+            midi.sendShortMsg(prev.status, prev.midino, 0x00);
+        }
+        // Arm the echo on this deck, then mute the stem so it echoes away
+        engine.setValue(unit, "group_[Channel" + deck + "]_enable", 1);
+        engine.setValue("[Channel" + deck + "_Stem" + stemNum + "]", "mute", 1);
+        midi.sendShortMsg(status, midino, 0x7F);  // light the pad
+        var timer = engine.beginTimer(DJCi300mk2.stemEchoTimeoutMs, function() {
+            engine.setValue(unit, "group_[Channel" + deck + "]_enable", 0);
+            midi.sendShortMsg(status, midino, 0x00);
+            DJCi300mk2._stemEcho[deck] = null;
+        }, true);
+        DJCi300mk2._stemEcho[deck] = { timer: timer, status: status, midino: midino };
+    };
+};
+DJCi300mk2.deckStemEcho1 = DJCi300mk2._mkStemEcho(0);  // pad 5 → Stem4
+DJCi300mk2.deckStemEcho2 = DJCi300mk2._mkStemEcho(1);  // pad 6 → Stem3
+DJCi300mk2.deckStemEcho3 = DJCi300mk2._mkStemEcho(2);  // pad 7 → Stem2
+DJCi300mk2.deckStemEcho4 = DJCi300mk2._mkStemEcho(3);  // pad 8 → Stem1
+
+// ===================== Toneplay / Key Mode (HOT CUE alt page, 0x40) =====================
+// Top row of the "Toneplay" page adjusts the track key in semitones, independent
+// of tempo (uses pitch_up/pitch_down = ±1 semitone each, tracked per deck):
+//   pad 1 = -1 , pad 2 = +1 , pad 3 = reset , pad 4 = keylock toggle.
+// -1/+1 are repeatable nudges (clamped to ±6). The reset pad lights when the key
+// is shifted from the original; pad 4 lights when keylock is on.
+DJCi300mk2._keyOffset = {1: 0, 2: 0, 3: 0, 4: 0};
+DJCi300mk2._keyResetNote = 0x42;  // pad 3
+
+DJCi300mk2._updateToneplayLEDs = function(physDeck) {
+    var deck    = DJCi300mk2.activeDeck(physDeck);
+    var status  = (physDeck === 1) ? 0x96 : 0x97;
+    var shifted = (DJCi300mk2._keyOffset[deck] || 0) !== 0;
+    // reset pad lights when the key is shifted from the original
+    midi.sendShortMsg(status, DJCi300mk2._keyResetNote, shifted ? 0x7F : 0x00);
+    // keylock pad (0x43) is driven by the LED connection map
+};
+
+// relative=true → nudge by delta semitones; relative=false → set absolute (reset uses 0)
+DJCi300mk2._nudgeKey = function(physDeck, delta, relative) {
+    var deck   = DJCi300mk2.activeDeck(physDeck);
+    var cur    = DJCi300mk2._keyOffset[deck] || 0;
+    var target = relative ? cur + delta : delta;
+    if (target < -6) { target = -6; }
+    if (target >  6) { target =  6; }
+    while (cur < target) { engine.setValue("[Channel" + deck + "]", "pitch_up",   1); cur++; }
+    while (cur > target) { engine.setValue("[Channel" + deck + "]", "pitch_down", 1); cur--; }
+    DJCi300mk2._keyOffset[deck] = target;
+    DJCi300mk2._updateToneplayLEDs(physDeck);
+};
+
+DJCi300mk2.deckKeyDown  = function(channel, _control, value, _status, _group) {
+    if (value) { DJCi300mk2._nudgeKey(DJCi300mk2._physicalDeck(channel), -1, true); }
+};  // pad 1
+DJCi300mk2.deckKeyUp    = function(channel, _control, value, _status, _group) {
+    if (value) { DJCi300mk2._nudgeKey(DJCi300mk2._physicalDeck(channel), 1, true); }
+};  // pad 2
+DJCi300mk2.deckKeyReset = function(channel, _control, value, _status, _group) {
+    if (value) { DJCi300mk2._nudgeKey(DJCi300mk2._physicalDeck(channel), 0, false); }
+};  // pad 3
+// pad 4 → keylock: reuses DJCi300mk2.deckKeylock (bound in the XML)
+
 DJCi300mk2.shutdown = function() {
     DJCi300mk2._disconnectDeckLEDs();
     midi.sendShortMsg(0x90, 0x03, 0x00);
@@ -367,7 +464,9 @@ DJCi300mk2._ledMap = [
     ["start_play",         0x7F, [[0x94,0x06]], []],
     ["play_indicator",     0x7F, [[0x91,0x07]], [[0x92,0x07]]],
     ["pfl",                0x7F, [[0x91,0x0C]], [[0x92,0x0C]]],
-    ["end_of_track",       0x7F, [[0x91,0x1C],[0x91,0x1D]], [[0x92,0x1C],[0x92,0x1D]]]
+    ["end_of_track",       0x7F, [[0x91,0x1C],[0x91,0x1D]], [[0x92,0x1C],[0x92,0x1D]]],
+    // Keylock → Toneplay page pad 4 (0x43)
+    ["keylock",            0x7F, [[0x96,0x43]], [[0x97,0x43]]]
 ];
 
 // Stem LED map: tracks mute state, LED ON when NOT muted (inverted logic).
@@ -422,6 +521,9 @@ DJCi300mk2._connectDeckLEDs = function() {
         DJCi300mk2._connectOneLEDInverted("[Channel" + aDeck + stemGroup + "]", "mute", stemMap[s][1], stemMap[s][2]);
         DJCi300mk2._connectOneLEDInverted("[Channel" + bDeck + stemGroup + "]", "mute", stemMap[s][1], stemMap[s][3]);
     }
+    // Refresh Toneplay key LEDs for the now-active decks
+    DJCi300mk2._updateToneplayLEDs(1);
+    DJCi300mk2._updateToneplayLEDs(2);
 };
 
 DJCi300mk2._disconnectDeckLEDs = function() {
